@@ -1,0 +1,44 @@
+<?php
+/**
+* Register menus and urls
+*/
+function grid_element_trash_menu() 
+{
+	return array(
+		'admin/config/grid/trash'=>array(
+			'title'=>t('Element Trash'),
+			'description'=>t('Administrate Container and Box Trash'),
+			'page callback'=>'drupal_get_form',
+			'page arguments'=>array('grid_element_trash_trash'),
+			'access arguments'=>array('administer grid'),
+			'type'=>MENU_NORMAL_ITEM,
+		),
+	);
+}
+/**
+*	Register grid element trash permission.
+*/
+function grid_element_trash_permission() {
+  return array(
+    'administer grid trash' => array(
+      'title' => t('Administer the Container and Box trash of Grid'),
+    ),
+  );
+}
+/**
+*	Trash form page
+*/
+function grid_element_trash_trash()
+{
+	$form=array();
+	
+	$form['trash'] = array(
+		'#type'=>'fieldset',
+		'#title'=>t('Trash'),
+	);
+
+	return system_settings_form($form);
+}
+
+
+?>

@@ -1,0 +1,6 @@
+; $Id$
+name = Grid Element Trash
+description = Puts Containers and Boxes into a trash so they cannot be used in Grid Editor anymore
+package = Grid
+core = 7.x
+dependencies[] = grid
