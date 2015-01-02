@@ -5,13 +5,23 @@
 function grid_element_trash_menu() 
 {
 	return array(
-		'admin/config/grid/trash'=>array(
-			'title'=>t('Element Trash'),
-			'description'=>t('Administrate Container and Box Trash'),
+		'admin/config/grid/boxtrash'=>array(
+			'title'=>t('Box Trash'),
+			'description'=>t('Administrate Box Trash'),
 			'page callback'=>'drupal_get_form',
-			'page arguments'=>array('grid_element_trash_trash'),
+			'page arguments'=>array('grid_element_trash_box_trash'),
 			'access arguments'=>array('administer grid'),
 			'type'=>MENU_NORMAL_ITEM,
+			'weight' => 9,
+		),
+		'admin/config/grid/containertrash'=>array(
+			'title'=>t('Container Trash'),
+			'description'=>t('Administrate Container Trash'),
+			'page callback'=>'drupal_get_form',
+			'page arguments'=>array('grid_element_trash_container_trash'),
+			'access arguments'=>array('administer grid'),
+			'type'=>MENU_NORMAL_ITEM,
+			'weight' => 9,
 		),
 	);
 }
@@ -25,20 +35,152 @@ function grid_element_trash_permission() {
     ),
   );
 }
+
 /**
-*	Trash form page
+*	Box Trash form page
 */
-function grid_element_trash_trash()
-{
+function grid_element_trash_box_trash()
+{	
+	/**
+	 * get the grid storage
+	 */
+	$storage=grid_get_storage();
+
 	$form=array();
-	
-	$form['trash'] = array(
-		'#type'=>'fieldset',
-		'#title'=>t('Trash'),
-	);
+
+	/**
+	 * look for all meta type boxes
+	 * @var [type]
+	 */
+	$meta_boxes = $storage->getMetaTypes();
+	foreach ($meta_boxes as $meta_box) 
+	{
+		$class = get_class($meta_box);
+		$meta_form = array(
+			'#type'=>'fieldset',
+			'#collapsible' => true,
+			'#title'=> $class.t(' meta type Boxes'),
+		);
+		$meta_form['info']=array(
+			'#type'=>'markup',
+			'#markup'=>'<div><small>'.t('All checked Boxes will be placed in Trash and won\'t be available in Grid anymore.').'</small></div>',
+		);
+
+		/**
+		 * get all available implementations of meta type box
+		 */
+		$obj=new $class();
+		$obj->storage = $storage;
+		$searchresult=$obj->metaSearch($meta_box->metaSearchCriteria(),"");
+		foreach ($searchresult as $key => $box) {
+			$type = $box->type();
+			$meta_form['grid_element_trash_box_'.$type.'_trashed']=array(
+				'#type'=>'checkbox',
+				'#default_value'=>variable_get('grid_element_trash_box_'.$type.'_trashed',0),
+				'#title'=>$type,
+			);
+		}
+
+		$form['trash_'.$class] = $meta_form;
+	}
+
 
 	return system_settings_form($form);
 }
+
+/**
+ * hook_grid_boxes_search_alter
+ *
+ * Hide grid boxes that had been moved to trash
+ * 
+ * @param  array 	$boxes  	dataset to be modified
+ * @param  int 		$grid_id 	id of nodes grid
+ * @param  int 		$node_id 	node id
+ */
+function grid_element_trash_grid_boxes_search_alter(&$boxes,$grid_id,$node_id){
+	for($i=0;$i<count($boxes);$i++)
+	{
+	    if( variable_get('grid_element_trash_box_'.$boxes[$i]['type'].'_trashed',0) )
+	    {
+	        array_splice($boxes,$i,1);
+	        $i--;
+	    }
+	}
+}
+
+/**
+*	Container Trash form page
+*/
+function grid_element_trash_container_trash()
+{	
+	/**
+	 * get the grid storage
+	 */
+	$storage=grid_get_storage();
+
+	$form=array();
+
+	$container_form = array(
+		'#type'=>'fieldset',
+		'#title'=> t('Container Trash'),
+	);
+	$container_form['info']=array(
+		'#type'=>'markup',
+		'#markup'=>'<div><small>'.t('All checked Containers will be placed in Trash and won\'t be available in Grid anymore.').'</small></div>',
+	);
+
+	/**
+	 * look for all meta type boxes
+	 * @var [type]
+	 */
+	$container_types = $storage->fetchContainerTypes();
+	foreach ($container_types as $container) 
+	{
+		$type = $container["type"];
+		/**
+		 * only content containers
+		 */
+		if(strpos($type, "c-") !== 0 && strpos($type, "s-") !== 0) continue;
+		/**
+		 * add checkbox option for type
+		 */
+		$container_form['grid_element_trash_container_'.$type.'_trashed']=array(
+			'#type'=>'checkbox',
+			'#default_value'=>variable_get('grid_element_trash_container_'.$type.'_trashed',0),
+			'#title'=>$type,
+		);
+
+	}
+
+	$form['trash_container'] = $container_form;
+
+
+	return system_settings_form($form);
+}
+
+/**
+ * hide grid containers that had been moved to trash
+ * @param  array 	$containers  	dataset to be modified
+ * @param  int 		$grid_id 		grid id
+ * @param  int 		$node_id 		node id
+ */
+function grid_element_trash_grid_containers_alter(&$containers,$grid_id,$node_id){
+	for($i=0;$i<count($containers);$i++)
+	{	
+		// var_dump($containers[$i]["type"]);
+		// var_dump(variable_get('grid_element_trash_container_'.$containers[$i]["type"].'_trashed',0) );
+	    if( variable_get('grid_element_trash_container_'.$containers[$i]["type"].'_trashed',0) )
+	    {
+	    	// var_dump("trashed ".$containers[$i]["type"]);
+	        array_splice($containers,$i,1);
+	        $i--;
+	    }
+	}
+}
+
+
+
+
 
 
 ?>
