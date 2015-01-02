@@ -46,6 +46,11 @@ function grid_element_trash_box_trash()
 	 */
 	$storage=grid_get_storage();
 
+	/**
+	 * content_types that are activated for grid
+	 */
+	$content_types = array_keys(grid_field_extra_fields()["node"]);
+
 	$form=array();
 
 	/**
@@ -59,6 +64,7 @@ function grid_element_trash_box_trash()
 		$meta_form = array(
 			'#type'=>'fieldset',
 			'#collapsible' => true,
+			'#collapsed' => true,
 			'#title'=> $class.t(' meta type Boxes'),
 		);
 		$meta_form['info']=array(
@@ -74,10 +80,16 @@ function grid_element_trash_box_trash()
 		$searchresult=$obj->metaSearch($meta_box->metaSearchCriteria(),"");
 		foreach ($searchresult as $key => $box) {
 			$type = $box->type();
+			$options = array();
+			foreach ($content_types as $content_type) {
+				$options[$content_type] = $content_type;
+
+			}
 			$meta_form['grid_element_trash_box_'.$type.'_trashed']=array(
-				'#type'=>'checkbox',
-				'#default_value'=>variable_get('grid_element_trash_box_'.$type.'_trashed',0),
+				'#type'=>'checkboxes',
+				'#options'=>$options,
 				'#title'=>$type,
+				'#default_value' => variable_get('grid_element_trash_box_'.$type.'_trashed',0)
 			);
 		}
 
@@ -98,9 +110,10 @@ function grid_element_trash_box_trash()
  * @param  int 		$node_id 	node id
  */
 function grid_element_trash_grid_boxes_search_alter(&$boxes,$grid_id,$node_id){
+	$node = node_load($node_id);
 	for($i=0;$i<count($boxes);$i++)
 	{
-	    if( variable_get('grid_element_trash_box_'.$boxes[$i]['type'].'_trashed',0) )
+	    if( variable_get('grid_element_trash_box_'.$boxes[$i]['type'].'_trashed',0)[$node->type] )
 	    {
 	        array_splice($boxes,$i,1);
 	        $i--;
@@ -117,6 +130,11 @@ function grid_element_trash_container_trash()
 	 * get the grid storage
 	 */
 	$storage=grid_get_storage();
+
+	/**
+	 * content_types that are activated for grid
+	 */
+	$content_types = array_keys(grid_field_extra_fields()["node"]);
 
 	$form=array();
 
@@ -141,11 +159,19 @@ function grid_element_trash_container_trash()
 		 * only content containers
 		 */
 		if(strpos($type, "c-") !== 0 && strpos($type, "s-") !== 0) continue;
+
+		$options = array();
+		foreach ($content_types as $content_type) {
+			$options[$content_type] = $content_type;
+
+		}
+
 		/**
 		 * add checkbox option for type
 		 */
 		$container_form['grid_element_trash_container_'.$type.'_trashed']=array(
-			'#type'=>'checkbox',
+			'#type'=>'checkboxes',
+			'#options' => $options,
 			'#default_value'=>variable_get('grid_element_trash_container_'.$type.'_trashed',0),
 			'#title'=>$type,
 		);
@@ -165,22 +191,15 @@ function grid_element_trash_container_trash()
  * @param  int 		$node_id 		node id
  */
 function grid_element_trash_grid_containers_alter(&$containers,$grid_id,$node_id){
+	$node = node_load($node_id);
 	for($i=0;$i<count($containers);$i++)
 	{	
-		// var_dump($containers[$i]["type"]);
-		// var_dump(variable_get('grid_element_trash_container_'.$containers[$i]["type"].'_trashed',0) );
-	    if( variable_get('grid_element_trash_container_'.$containers[$i]["type"].'_trashed',0) )
-	    {
-	    	// var_dump("trashed ".$containers[$i]["type"]);
+	    if( variable_get('grid_element_trash_container_'.$containers[$i]["type"].'_trashed',0)[$node->type] )
+	    {	
 	        array_splice($containers,$i,1);
 	        $i--;
 	    }
 	}
 }
-
-
-
-
-
 
 ?>
