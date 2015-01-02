@@ -162,6 +162,7 @@ function grid_element_trash_container_trash()
 
 		$options = array();
 		foreach ($content_types as $content_type) {
+			if($content_type == variable_get('grid_sidebar') ) continue;
 			$options[$content_type] = $content_type;
 
 		}
