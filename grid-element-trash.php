@@ -3,15 +3,11 @@
 /**
  * The plugin bootstrap file
  *
- * @link              http://example.com
- * @since             1.0.0
- * @package           Grid_Element_Trash
- *
  * @wordpress-plugin
  * Plugin Name:       Grid Element Trash
  * Plugin URI:        https://github.com/palasthotel/grid-element-trash-wordpress
  * Description:       Extends Grid with a trash for containers and boxes
- * Version:           1.0.0
+ * Version:           1.0
  * Author:            PALASTHOTEL
  * Author URI:        http://palasthotel.de
  * License:           GPL-2.0+
@@ -52,7 +48,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-grid-element-trash.ph
  */
 function run_plugin_name() {
 
-	$plugin = new Plugin_Name();
+	$plugin = new Grid_Element_Trash();
 	$plugin->run();
 
 }

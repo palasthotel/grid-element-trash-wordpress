@@ -58,6 +58,11 @@ class Grid_Element_Trash{
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-i18n.php';
 
 		/**
+		 * The store class
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'classes/class-grid-element-trash-store.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the Dashboard.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-admin.php';
@@ -97,8 +102,7 @@ class Grid_Element_Trash{
 		// settings page
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'menu_page' );
 		
-		// $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		// $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_ajax_grid_element_trash_change_option', $plugin_admin, 'change_option' );
 
 	}
 
