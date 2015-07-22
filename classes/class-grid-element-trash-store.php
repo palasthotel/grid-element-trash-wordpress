@@ -12,19 +12,26 @@ class Grid_Element_Trash_Store{
 	 */
 	public function __construct() {
 	}
+	/**
+	 * delete all options from database
+	 */
+	public function clear(){
+		global $wpdb;
+		return $wpdb->query('DELETE FROM '.$wpdb->prefix.'options WHERE option_name LIKE "grid_element_trash%"');
+	}
 
 	/**
 	 * get option if container is trashed
 	 */
 	public function is_container_trashed($type){
-		return get_site_option("grid_element_trash_container_".$type, false );
+		return get_site_option("grid_element_trash_container_".$type, 0 );
 	}
 
 	/**
 	 * get option if box is trashed
 	 */
 	public function is_box_trashed($type){
-		return get_site_option("grid_element_trash_box_".$type, false );
+		return get_site_option("grid_element_trash_box_".$type, 0 );
 	}
 
 	/**

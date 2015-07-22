@@ -10,7 +10,7 @@ class Grid_Element_Trash_Deactivator {
 	 * FIRE
 	 */
 	public static function deactivate() {
-
+		
 	}
 
 }

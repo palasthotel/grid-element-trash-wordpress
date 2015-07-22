@@ -31,12 +31,11 @@ class Grid_Element_Trash{
 	public function __construct() {
 
 		$this->plugin_name = 'grid-element-trash';
-		$this->version = '1.0.0';
+		$this->version = '1.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
-		$this->define_public_hooks();
 
 	}
 
@@ -67,11 +66,6 @@ class Grid_Element_Trash{
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-admin.php';
 
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-public.php';
 
 		$this->loader = new Grid_Element_Trash_Loader();
 
@@ -101,19 +95,12 @@ class Grid_Element_Trash{
 
 		// settings page
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'menu_page' );
-		
 		$this->loader->add_action( 'wp_ajax_grid_element_trash_change_option', $plugin_admin, 'change_option' );
 
-	}
-
-	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 */
-	private function define_public_hooks() {
-
-		$plugin_public = new Grid_Element_Trash_Public( $this->get_plugin_name(), $this->get_version() );
-
+		// grid hook
+		$this->loader->add_filter('grid_boxes_search', $plugin_admin, 'boxes_filter');
+		$this->loader->add_filter('grid_metaboxes',$plugin_admin, 'boxes_filter');
+		$this->loader->add_filter('grid_containers', $plugin_admin, 'containers_filter');
 	}
 
 	/**

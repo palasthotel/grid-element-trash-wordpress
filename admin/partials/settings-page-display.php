@@ -6,6 +6,7 @@
 
 <div class="wrap grid-element-trash-wrapper">
 	<h2>Grid Elements Trash</h2>
+	<p>Uncheck to disable Element in Grid</p>
 	<dl>
 		<dt>Containers</dt>
 		<dd>
@@ -15,7 +16,7 @@
 				$type = $container["type"];
 				if(strpos($type, "c-") !== 0) continue;
 				$checked = '';
-				if( $trash->is_container_trashed($type) ){
+				if( !$trash->is_container_trashed($type) ){
 					$checked = 'checked="checked"';
 				}
 				echo "<li><input class='trash-check check-container' type='checkbox' data-element='container' $checked name='$type' /> ".$type."</li>";
@@ -37,12 +38,19 @@
 				foreach ($searchresult as $key => $box) 
 				{
 					$type = $box->type();
+					$display = $box->render(true);
 					$checked = '';
-					if( $trash->is_box_trashed($type) ){
+					$trashid = $type;
+					if($type == "reference")
+					{
+						$trashid = "reference-".$box->content->boxid;
+					}
+					if( !$trash->is_box_trashed($trashid) )
+					{
 						$checked = 'checked="checked"';
 					}
 					?>
-						<dd><?php echo "<input class='trash-check check-box' type='checkbox' data-element='box' $checked name='$type' />".$type; ?></dd>
+						<dd><?php echo "<input class='trash-check check-box' type='checkbox' data-element='box' $checked name='$trashid' />".$display; ?></dd>
 					<?php
 				}
 			echo "</dl>";

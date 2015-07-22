@@ -39,7 +39,7 @@ class Grid_Element_Trash_Admin {
 	 */
 	public function menu_page() 
 	{
-		add_submenu_page( 'options-general.php', 'Grid Elements Trash', 'Grid Elements Trash', 'manage_options', $this->settings_page, array($this, "render_settings"));
+		add_submenu_page( 'tools.php', 'Grid Elements Trash', 'Grid Elements Trash', 'manage_options', $this->settings_page, array($this, "render_settings"));
 	}
 
 	/**
@@ -48,11 +48,6 @@ class Grid_Element_Trash_Admin {
 	public function render_settings(){
 
 		if(class_exists("grid_grid")){
-
-			if(!class_exists("Grid_Element_Trash_Store")){
-				print "<p>No Store found!?</p>";
-				return;
-			}
 
 			/**
 			 * style for settingspage
@@ -93,11 +88,9 @@ class Grid_Element_Trash_Admin {
 	 */
 	public function change_option(){
 
-		$element = sanitize_text_field( $_GET["element"] );
+		$element = sanitize_text_field($_GET["element"]);
 		$type = sanitize_text_field( $_GET["type"] );
-		$value = intval( $_GET["value"] );
-
-		$disabled = ($value < 0);
+		$disabled = intval( $_GET["value"] );
 
 		$trash = new Grid_Element_Trash_Store();
 
@@ -108,7 +101,6 @@ class Grid_Element_Trash_Admin {
 			"type" => $type, 
 			"value" => $disabled,
 		);
-
 		if($element == "box"){
 			$trash->set_box($type, $disabled);
 		} else if($element == "container"){
@@ -117,8 +109,34 @@ class Grid_Element_Trash_Admin {
 			$return->error = true;
 			$return->error_msg = "Could not find matching element";
 		}
-		return json_encode($return);
-
+		echo json_encode($return);
+		exit;
+	}
+	/**
+	 * filter for boxes
+	 */
+	public function boxes_filter($boxes){
+		$trash = new Grid_Element_Trash_Store();
+		for ($i=0; $i < count($boxes) ; $i++) { 
+			if($trash->is_box_trashed($boxes[$i]["type"])){
+				array_splice($boxes,$i,1);
+				$i--;
+			}
+		}
+		return $boxes;
+	}
+	/**
+	 * filter for containers
+	 */
+	public function containers_filter($containers){
+		$trash = new Grid_Element_Trash_Store();
+		for ($i=0; $i < count($containers) ; $i++) { 
+			if($trash->is_container_trashed($containers[$i]["type"])){
+				array_splice($containers,$i,1);
+				$i--;
+			}
+		}
+		return $containers;
 	}
 
 }
