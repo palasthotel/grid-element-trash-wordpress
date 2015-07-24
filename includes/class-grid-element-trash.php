@@ -31,7 +31,7 @@ class Grid_Element_Trash{
 	public function __construct() {
 
 		$this->plugin_name = 'grid-element-trash';
-		$this->version = '1.0';
+		$this->version = '0.9';
 
 		$this->load_dependencies();
 		$this->set_locale();
