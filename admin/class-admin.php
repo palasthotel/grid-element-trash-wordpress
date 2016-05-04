@@ -117,8 +117,12 @@ class Grid_Element_Trash_Admin {
 	 */
 	public function boxes_filter($boxes){
 		$trash = new Grid_Element_Trash_Store();
-		for ($i=0; $i < count($boxes) ; $i++) { 
-			if($trash->is_box_trashed($boxes[$i]["type"])){
+		for ($i=0; $i < count($boxes) ; $i++) {
+			$trashid=$boxes[$i]["type"];
+			if($boxes[$i]["type"]=="reference") {
+				$trashid="reference-".$boxes[$i]["content"]->boxid;
+			}
+			if($trash->is_box_trashed($trashid)){
 				array_splice($boxes,$i,1);
 				$i--;
 			}
