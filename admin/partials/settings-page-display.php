@@ -51,6 +51,7 @@
 					}
 					?>
 						<dd><?php echo "<input class='trash-check check-box' type='checkbox' data-element='box' $checked name='$trashid' />".$display; ?></dd>
+
 					<?php
 				}
 			echo "</dl>";
