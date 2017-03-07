@@ -4,7 +4,7 @@ Donate link: http://palasthotel.de/
 Tags: grid, extension, trash
 Requires at least: 4.0
 Tested up to: 4.7.3
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
 
@@ -32,7 +32,7 @@ This plugin extends the grid plugin. You can hide containers and boxes from the 
 
 == Changelog ==
 
-= 1.0 =
+= 1.1 =
 
  * Restructured Plugin
  * No boxes in Grid fix
