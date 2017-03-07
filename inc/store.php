@@ -1,17 +1,11 @@
 <?php
-
+namespace GridElementTrash;
 /**
  * The core plugin class.
  *
  */
-class Grid_Element_Trash_Store{
-
-	/**
-	 * Define the core functionality of the plugin.
-	 * 
-	 */
-	public function __construct() {
-	}
+class Store{
+	
 	/**
 	 * delete all options from database
 	 */

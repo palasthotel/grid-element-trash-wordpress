@@ -1,6 +1,9 @@
 <?php
 /**
  * Settings page
+ * @var grid_db $storage
+ * @var array $containers
+ * @var array $meta_boxes
  */
 ?>
 
@@ -30,13 +33,23 @@
 		foreach ($meta_boxes as $meta_box) {
 			$class = get_class($meta_box);
 			if($class == "grid_post_box") continue;
+			/**
+			 * @var grid_box $obj
+			 */
 			$obj=new $class();
 			$obj->storage = $storage;
 			$searchresult=$obj->metaSearch($meta_box->metaSearchCriteria(),"");
-			echo "<dl>";
-				echo "<dt>".$class."</dt>";
+			?>
+			<dl>
+				
+				<dt><?php echo $class; ?></dt>
+				
+				<?php
 				foreach ($searchresult as $key => $box) 
 				{
+					/**
+					 * @var grid_box $box
+					 */
 					$type = $box->type();
 					$display = $box->render(true);
 					$checked = '';
@@ -54,11 +67,12 @@
 
 					<?php
 				}
-			echo "</dl>";
-			
+				?>
+			</dl>
+			<?php
 		}
-		?></dd>
+		?>
+		</dd>
 	</dl>
-	
 
 </div>

@@ -5,7 +5,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-require_once plugin_dir_path( dirname( __FILE__ ) ) . 'classes/class-grid-element-trash-store.php';
+require_once dirname(__FILE__).'/inc/store.php';
 
-$trash = new Grid_Element_Trash_Store();
+$trash = new \GridElementTrash\Store();
 $result = $trash->clear();

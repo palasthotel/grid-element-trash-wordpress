@@ -1,19 +1,22 @@
 <?php
 
+namespace GridElementTrash;
+
 /**
  * The plugin bootstrap file
  *
- * @wordpress-plugin
  * Plugin Name:       Grid Element Trash
  * Plugin URI:        https://github.com/palasthotel/grid-element-trash-wordpress
  * Description:       Extends Grid with a trash for containers and boxes
- * Version:           0.9.1
- * Author:            PALASTHOTEL
- * Author URI:        http://palasthotel.de
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       grid-element-trash
- * Domain Path:       /languages
+ * Version:           1.0
+ * Author: Palasthotel <rezeption@palasthotel.de> (in person: Benjamin Birkenhake, Edward Bock, Enno Welbers)
+ * Author URI: http://www.palasthotel.de
+ * Requires at least: 4.0
+ * Tested up to: 4.7.3
+ * License: http://www.gnu.org/licenses/gpl-2.0.html GPLv2
+ * @copyright Copyright (c) 2014, Palasthotel
+ * @package Palasthotel\Grid-WordPress
+ *
  */
 
 // If this file is called directly, abort.
@@ -21,35 +24,31 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * The code that runs during plugin activation.
- */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-activator.php';
-
-/**
- * The code that runs during plugin deactivation.
- */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-deactivator.php';
-
-/** This action is documented in includes/class-plugin-name-activator.php */
-register_activation_hook( __FILE__, array( 'Grid_Element_Trash_Activator', 'activate' ) );
-
-/** This action is documented in includes/class-plugin-name-deactivator.php */
-register_deactivation_hook( __FILE__, array( 'Grid_Element_Trash_Deactivator', 'deactivate' ) );
-
-/**
- * The core plugin class that is used to define internationalization,
- * dashboard-specific hooks, and public-facing site hooks.
- */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-grid-element-trash.php';
-
-/**
- * Begins execution of the plugin.
- */
-function run_plugin_name() {
-
-	$plugin = new Grid_Element_Trash();
-	$plugin->run();
-
+class Plugin{
+	
+	const DOMAIN = "grid-element-trash";
+	
+	function __construct() {
+		
+		$this->url = plugin_dir_url(__FILE__);
+		$this->path = plugin_dir_path(__FILE__);
+		
+		require_once "inc/store.php";
+		
+		/**
+		 * settings page
+		 */
+		require_once "inc/settings.php";
+		$this->settings = new Settings($this);
+		
+		/**
+		 * filter the grid elements
+		 */
+		require_once "inc/elements-filter.php";
+		$this->elements_filter = new ElementsFilter($this);
+		
+	}
 }
-run_plugin_name();
+new Plugin();
+
+require_once "public-functions.php";
