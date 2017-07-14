@@ -33,22 +33,22 @@ class Plugin{
 		$this->url = plugin_dir_url(__FILE__);
 		$this->path = plugin_dir_path(__FILE__);
 		
-		require_once "inc/store.php";
+		require_once dirname(__FILE__)."/inc/store.php";
 		
 		/**
 		 * settings page
 		 */
-		require_once "inc/settings.php";
+		require_once dirname(__FILE__)."/inc/settings.php";
 		$this->settings = new Settings($this);
 		
 		/**
 		 * filter the grid elements
 		 */
-		require_once "inc/elements-filter.php";
+		require_once dirname(__FILE__)."/inc/elements-filter.php";
 		$this->elements_filter = new ElementsFilter($this);
 		
 	}
 }
 new Plugin();
 
-require_once "public-functions.php";
+require_once dirname(__FILE__)."/public-functions.php";
