@@ -2,13 +2,18 @@
 /**
  * Settings page
  * @var grid_db $storage
+ * @var Store $trash
  * @var array $containers
  * @var array $meta_boxes
+ * @var grid_container[] $reuseContainers
  */
+
+use GridElementTrash\Store;
+
 ?>
 
 <div class="wrap grid-element-trash-wrapper">
-	<h2>Grid Elements Trash</h2>
+	<h2>Grid › Trash</h2>
 	<p>Uncheck to disable Element in Grid</p>
 	<dl>
 		<dt>Containers</dt>
@@ -28,6 +33,24 @@
 			?>
 			</ul>
 		</dd>
+        <dt>Reuse Containers</dt>
+        <dd>
+            <ul class="container-trash-list">
+				<?php
+				foreach ($reuseContainers as $container) {
+				    $title = $container->reusetitle;
+					$type = $container->type;
+					$id = $container->containerid;
+					$checked = 'checked="checked"';
+					if( $trash->is_reuse_container_trashed($id) ){
+						$checked = '';
+					}
+					echo "<li><input class='trash-check check-container' type='checkbox' data-element='reuse-container' $checked name='$id' /> ".$title."</li>";
+				}
+
+				?>
+            </ul>
+        </dd>
 		<dt>Boxes</dt>
 		<dd><?php 
 		foreach ($meta_boxes as $meta_box) {
