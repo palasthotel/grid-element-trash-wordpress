@@ -8,7 +8,7 @@ namespace GridElementTrash;
  * Plugin Name:       Grid Element Trash
  * Plugin URI:        https://github.com/palasthotel/grid-element-trash-wordpress
  * Description:       Extends Grid with a trash for containers and boxes
- * Version:           1.2.0
+ * Version:           1.1.1
  * Author: Palasthotel <rezeption@palasthotel.de> (in person: Benjamin Birkenhake, Edward Bock, Enno Welbers)
  * Author URI: http://www.palasthotel.de
  * Requires at least: 4.0
