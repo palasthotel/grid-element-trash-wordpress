@@ -2,6 +2,8 @@
 
 namespace GridElementTrash;
 
+use grid_db;
+
 /**
  * Class Settings
  * @package GridElementTrash
@@ -18,9 +20,8 @@ class Settings {
 	function __construct($plugin) {
 		$this->plugin = $plugin;
 		
-		add_action( 'admin_menu', array( $this, 'menu_page' ) );
+		add_action( 'admin_menu', array( $this, 'menu_page' ), 15 );
 		add_action( 'wp_ajax_grid_element_trash_change_option', array( $this, 'change_option') );
-		
 		
 	}
 	
@@ -29,7 +30,14 @@ class Settings {
 	 */
 	public function menu_page()
 	{
-		add_submenu_page( 'tools.php', 'Grid Elements Trash', 'Grid Elements Trash', 'manage_options', self::PAGE, array($this, "render_settings"));
+		add_submenu_page(
+			'grid_settings',
+			'Trash ‹ Grid',
+			'Trash',
+			'manage_options',
+			self::PAGE,
+			array($this, "render_settings")
+		);
 	}
 	
 	/**
@@ -58,13 +66,19 @@ class Settings {
 			
 			/**
 			 * get the grid storage
-			 * @var \grid_db $storage
+			 * @var grid_db $storage
 			 */
 			$storage = grid_wp_get_storage();
 			
 			$containers = $storage->fetchContainerTypes();
 			$meta_boxes = $storage->getMetaTypes();
-			
+			$reuseContainerIds = $storage->getReuseContainerIds();
+			$reuseContainers=array();
+			foreach($reuseContainerIds as $id)
+			{
+				$reuseContainers[]=$storage->loadReuseContainer($id);
+			}
+
 			$trash = new Store();
 			
 			require $this->plugin->path."/partials/settings-page-display.php";
@@ -96,6 +110,8 @@ class Settings {
 			$trash->set_box($type, $disabled);
 		} else if($element == "container"){
 			$trash->set_container($type, $disabled);
+		} else if($element == "reuse-container"){
+			$trash->set_reuse_container($type, $disabled);
 		} else {
 			$return->error = true;
 			$return->error_msg = "Could not find matching element";

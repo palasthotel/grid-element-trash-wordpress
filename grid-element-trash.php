@@ -15,7 +15,7 @@ namespace GridElementTrash;
  * Tested up to: 4.7.3
  * License: http://www.gnu.org/licenses/gpl-2.0.html GPLv2
  * @copyright Copyright (c) 2014, Palasthotel
- * @package Palasthotel\Grid-WordPress
+ * @package Palasthotel\GridElementTrash
  *
  */
 

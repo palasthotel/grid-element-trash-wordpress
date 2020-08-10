@@ -18,7 +18,7 @@ class ElementsFilter {
 		add_filter( 'grid_boxes_search', array( $this, 'boxes_filter' ) );
 		add_filter( 'grid_metaboxes', array( $this, 'boxes_filter' ) );
 		add_filter( 'grid_containers', array( $this, 'containers_filter' ) );
-		
+		add_filter( 'grid_reusable_containers', array($this, 'reusable_containers_filter'));
 	}
 	
 	/**
@@ -53,6 +53,17 @@ class ElementsFilter {
 			}
 		}
 		
+		return $containers;
+	}
+
+	public function reusable_containers_filter($containers){
+		$trash = new Store();
+		for ( $i = 0; $i < count( $containers ); $i ++ ) {
+			if ( $trash->is_reuse_container_trashed( $containers[ $i ]["id"]) ) {
+				array_splice( $containers, $i, 1 );
+				$i --;
+			}
+		}
 		return $containers;
 	}
 	

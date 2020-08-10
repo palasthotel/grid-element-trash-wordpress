@@ -22,6 +22,13 @@ class Store{
 	}
 
 	/**
+	 * get option if reuse container is trashed
+	 */
+	public function is_reuse_container_trashed($id){
+		return get_site_option("grid_element_trash_reuse_container_".$id, 0 );
+	}
+
+	/**
 	 * get option if box is trashed
 	 */
 	public function is_box_trashed($type){
@@ -33,6 +40,13 @@ class Store{
 	 */
 	public function set_container($type, $disabled){
 		return $this->set_option("container", $type, $disabled);
+	}
+
+	/**
+	 * set option for container type
+	 */
+	public function set_reuse_container($id, $disabled){
+		return $this->set_option("reuse_container", $id, $disabled);
 	}
 
 	/**
