@@ -2,8 +2,6 @@
 
 namespace GridElementTrash;
 
-use grid_db;
-
 /**
  * Class Settings
  * @package GridElementTrash
@@ -66,12 +64,10 @@ class Settings {
 			
 			/**
 			 * get the grid storage
-			 * @var grid_db $storage
 			 */
 			$storage = grid_wp_get_storage();
-			
 			$containers = $storage->fetchContainerTypes();
-			$meta_boxes = $storage->getMetaTypes();
+			$meta_boxes = grid_plugin()->gridAPI->getMetaTypes();
 			$reuseContainerIds = $storage->getReuseContainerIds();
 			$reuseContainers=array();
 			foreach($reuseContainerIds as $id)
